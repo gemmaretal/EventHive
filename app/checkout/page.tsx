@@ -1,310 +1,339 @@
 'use client'
 
-import React, { useState } from 'react'
-import {
-  Box,
-  Typography,
-  Paper,
-  Button,
-  IconButton,
-  TextField,
-  Divider,
-  Stack,
-  Snackbar,
-  Alert,
-} from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { useCart } from '@/context/CartContext'
-import { calculateCartSummary, getAddonById } from '@/utils/cart'
-import { mockEvents } from '@/mocks/events'
+import { useState, useEffect } from 'react'
+import { processPayment } from '@/lib/paymentMock'
+
+interface CartItem {
+  eventId?: string
+  addonId?: string
+  quantity: number
+  price: number
+  perTicket?: boolean
+  name?: string
+}
+
+interface Cart {
+  tickets: CartItem[]
+  addons: CartItem[]
+  selectedGroupId?: string
+}
+
+interface Group {
+  id: string
+  title: string
+  members: string[]
+  maxMembers: number
+}
+
+interface Order {
+  id: string
+  createdAt: string
+  items: Cart
+  total: number
+  groupId?: string
+  members: string[]
+  invited: string[]
+}
 
 export default function CheckoutPage() {
-  const {
-    tickets,
-    addons,
-    removeTicket,
-    updateTicketQuantity,
-    removeAddon,
-    updateAddonQuantity,
-  } = useCart()
+  const [cart, setCart] = useState<Cart | null>(null)
+  const [group, setGroup] = useState<Group | null>(null)
+  const [invited, setInvited] = useState<string[]>([])
+  const [error, setError] = useState<string>('')
+  const [success, setSuccess] = useState<Order | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean
-    message: string
-    severity: 'success' | 'error' | 'warning' | 'info'
-  }>({
-    open: false,
-    message: '',
-    severity: 'info',
-  })
+  useEffect(() => {
+    try {
+      const cartData = localStorage.getItem('cart')
+      const parsedCart: Cart = cartData
+        ? JSON.parse(cartData)
+        : { tickets: [], addons: [] }
+      setCart(parsedCart)
 
-  const summary = calculateCartSummary(tickets, addons)
+      if (parsedCart.selectedGroupId) {
+        const groupsData = localStorage.getItem('groupsState')
+        if (groupsData) {
+          const groupsState = JSON.parse(groupsData)
+          const foundGroup = groupsState.groups?.find(
+            (g: Group) => g.id === parsedCart.selectedGroupId
+          )
+          if (foundGroup) setGroup(foundGroup)
+        }
+      }
 
-  const handleTicketQuantityChange = (eventId: string, newQuantity: number) => {
-    if (newQuantity < 0) return
-    updateTicketQuantity(eventId, newQuantity)
+      const invitedData = localStorage.getItem('nearbyInvites')
+      if (invitedData) {
+        const invitedList = JSON.parse(invitedData)
+        setInvited(Array.isArray(invitedList) ? invitedList : [])
+      }
+    } catch (err) {
+      console.error('Error loading checkout data:', err)
+      setError('Failed to load checkout data')
+    }
+  }, [])
+
+  const calculateTotals = () => {
+    if (!cart) return { subtotal: 0, tax: 0, total: 0 }
+
+    let subtotal = 0
+
+    cart.tickets.forEach(ticket => {
+      subtotal += ticket.price * ticket.quantity
+    })
+
+    cart.addons.forEach(addon => {
+      const addonTotal = addon.price * addon.quantity
+      subtotal += addonTotal
+    })
+
+    const tax = subtotal * 0.1 // 10% tax
+    const total = subtotal + tax
+
+    return { subtotal, tax, total }
   }
 
-  const handleAddonQuantityChange = (
-    addonId: string,
-    eventId: string,
-    newQuantity: number
-  ) => {
-    if (newQuantity < 0) return
+  const { subtotal, tax, total } = calculateTotals()
 
-    const result = updateAddonQuantity(addonId, eventId, newQuantity)
-    if (!result.success) {
-      setSnackbar({
-        open: true,
-        message: result.message || 'Failed to update quantity',
-        severity: 'error',
+  const handlePayment = async () => {
+    if (!cart) return
+
+    setError('')
+    setLoading(true)
+
+    try {
+      for (const addon of cart.addons) {
+        if (addon.quantity < 0) {
+          setError('Invalid addon quantity')
+          setLoading(false)
+          return
+        }
+      }
+
+      if (group) {
+        const totalTickets = cart.tickets.reduce(
+          (sum, t) => sum + t.quantity,
+          0
+        )
+        if (group.members.length + totalTickets > group.maxMembers) {
+          setError(`Group capacity exceeded (max ${group.maxMembers} members)`)
+          setLoading(false)
+          return
+        }
+      }
+
+      const result = await processPayment({
+        amount: total,
+        deterministic: true,
       })
+
+      if (!result.success) {
+        setError(result.error || 'Payment failed')
+        setLoading(false)
+        return
+      }
+
+      const order: Order = {
+        id: result.transactionId || 'unknown',
+        createdAt: new Date().toISOString(),
+        items: cart,
+        total,
+        groupId: cart.selectedGroupId,
+        members: group?.members || [],
+        invited,
+      }
+
+      const existingOrders = localStorage.getItem('mockOrders')
+      const orders: Order[] = existingOrders ? JSON.parse(existingOrders) : []
+      orders.push(order)
+      localStorage.setItem('mockOrders', JSON.stringify(orders))
+
+      localStorage.removeItem('cart')
+
+      setSuccess(order)
+      setLoading(false)
+    } catch (err) {
+      console.error('Payment error:', err)
+      setError('Payment processing failed')
+      setLoading(false)
     }
   }
 
-  const handleCloseSnackbar = () => {
-    setSnackbar(prev => ({ ...prev, open: false }))
-  }
-
-  const getEventById = (eventId: string) => {
-    return mockEvents.find(e => e.id === eventId || e.slug === eventId)
-  }
-
-  if (tickets.length === 0 && addons.length === 0) {
+  if (success) {
+    const joinedCount = success.members.length + success.invited.length
     return (
-      <Box sx={{ py: 8, textAlign: 'center' }}>
-        <Typography variant="h4" gutterBottom>
-          Your Cart is Empty
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-          Add some tickets and add-ons to get started!
-        </Typography>
-        <Button variant="contained" href="/events">
-          Browse Events
-        </Button>
-      </Box>
+      <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+        <h1 style={{ color: '#4caf50' }}>Order Successful!</h1>
+        <div
+          style={{
+            marginTop: '20px',
+            padding: '15px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+          }}
+        >
+          <p>
+            <strong>Order ID:</strong> {success.id}
+          </p>
+          <p>
+            <strong>Total:</strong> ${success.total.toFixed(2)}
+          </p>
+          <p>
+            <strong>Date:</strong>{' '}
+            {new Date(success.createdAt).toLocaleString()}
+          </p>
+          {success.groupId && (
+            <p>
+              <strong>Joined Users:</strong> {joinedCount}
+            </p>
+          )}
+        </div>
+      </div>
     )
   }
 
+  if (!cart) {
+    return <div style={{ padding: '20px' }}>Loading...</div>
+  }
+
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        Checkout
-      </Typography>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      <h1>Checkout</h1>
 
-      <Stack spacing={3} sx={{ mt: 3 }}>
-        {tickets.length > 0 && (
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Tickets
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Stack spacing={2}>
-              {tickets.map(ticket => {
-                const event = getEventById(ticket.eventId)
-                return (
-                  <Box
-                    key={ticket.eventId}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle1">
-                        {event?.title || ticket.eventId}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        ${ticket.price.toFixed(2)} per ticket
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                      }}
-                    >
-                      <TextField
-                        type="number"
-                        size="small"
-                        value={ticket.quantity}
-                        onChange={e =>
-                          handleTicketQuantityChange(
-                            ticket.eventId,
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                        inputProps={{ min: 0 }}
-                        sx={{ width: 80 }}
-                      />
-                      <Typography variant="body1" sx={{ minWidth: 80 }}>
-                        ${(ticket.price * ticket.quantity).toFixed(2)}
-                      </Typography>
-                      <IconButton
-                        color="error"
-                        onClick={() => removeTicket(ticket.eventId)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                )
-              })}
-            </Stack>
-          </Paper>
-        )}
-
-        {addons.length > 0 && (
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Add-ons
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Stack spacing={2}>
-              {addons.map(addon => {
-                const addonData = getAddonById(addon.addonId, addon.eventId)
-                const event = getEventById(addon.eventId)
-                const ticket = tickets.find(t => t.eventId === addon.eventId)
-                const ticketQuantity = ticket?.quantity || 0
-
-                let totalPrice = 0
-                if (addonData) {
-                  if (addon.perTicket) {
-                    totalPrice =
-                      addonData.price * addon.quantity * ticketQuantity
-                  } else {
-                    totalPrice = addonData.price * addon.quantity
-                  }
-                }
-
-                return (
-                  <Box
-                    key={`${addon.addonId}-${addon.eventId}`}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle1">
-                        {addonData?.name || addon.addonId}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {event?.title || addon.eventId}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        ${addonData?.price.toFixed(2) || '0.00'}{' '}
-                        {addon.perTicket
-                          ? `per ticket (× ${ticketQuantity} tickets)`
-                          : 'per order'}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                      }}
-                    >
-                      <TextField
-                        type="number"
-                        size="small"
-                        value={addon.quantity}
-                        onChange={e =>
-                          handleAddonQuantityChange(
-                            addon.addonId,
-                            addon.eventId,
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                        inputProps={{ min: 0 }}
-                        sx={{ width: 80 }}
-                      />
-                      <Typography variant="body1" sx={{ minWidth: 80 }}>
-                        ${totalPrice.toFixed(2)}
-                      </Typography>
-                      <IconButton
-                        color="error"
-                        onClick={() =>
-                          removeAddon(addon.addonId, addon.eventId)
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                )
-              })}
-            </Stack>
-          </Paper>
-        )}
-
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Order Summary
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <Stack spacing={1}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography variant="body1">Subtotal</Typography>
-              <Typography variant="body1">
-                ${summary.subtotal.toFixed(2)}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography variant="body1">Tax (8%)</Typography>
-              <Typography variant="body1">${summary.tax.toFixed(2)}</Typography>
-            </Box>
-            <Divider />
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography variant="h6">Total</Typography>
-              <Typography variant="h6">${summary.total.toFixed(2)}</Typography>
-            </Box>
-          </Stack>
-          <Button
-            variant="contained"
-            fullWidth
-            size="large"
-            sx={{ mt: 3 }}
-            disabled={tickets.length === 0}
-          >
-            Proceed to Payment
-          </Button>
-        </Paper>
-      </Stack>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
+      {/* Error message */}
+      {error && (
+        <div
+          style={{
+            padding: '10px',
+            backgroundColor: '#ffebee',
+            color: '#c62828',
+            marginBottom: '15px',
+            borderRadius: '4px',
+          }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Box>
+          {error}
+        </div>
+      )}
+
+      {/* Tickets */}
+      {cart.tickets.length > 0 && (
+        <div style={{ marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '18px' }}>Tickets</h2>
+          {cart.tickets.map((ticket, idx) => (
+            <div
+              key={idx}
+              style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}
+            >
+              <span>{ticket.name || `Event ${ticket.eventId}`}</span>
+              <span style={{ float: 'right' }}>
+                {ticket.quantity} × ${ticket.price.toFixed(2)} = $
+                {(ticket.quantity * ticket.price).toFixed(2)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Add-ons */}
+      {cart.addons.length > 0 && (
+        <div style={{ marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '18px' }}>Add-ons</h2>
+          {cart.addons.map((addon, idx) => (
+            <div
+              key={idx}
+              style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}
+            >
+              <span>{addon.name || `Addon ${addon.addonId}`}</span>
+              <span style={{ float: 'right' }}>
+                {addon.quantity} × ${addon.price.toFixed(2)} = $
+                {(addon.quantity * addon.price).toFixed(2)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Group summary */}
+      {group && (
+        <div
+          style={{
+            marginBottom: '20px',
+            padding: '10px',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '4px',
+          }}
+        >
+          <h2 style={{ fontSize: '18px' }}>Group</h2>
+          <p>
+            <strong>{group.title}</strong>
+          </p>
+          <p>Current members: {group.members.length}</p>
+          <p>Invited: {invited.length}</p>
+        </div>
+      )}
+
+      {/* Totals */}
+      <div
+        style={{
+          marginTop: '20px',
+          padding: '15px',
+          backgroundColor: '#fafafa',
+          borderRadius: '4px',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '8px',
+          }}
+        >
+          <span>Subtotal:</span>
+          <span>${subtotal.toFixed(2)}</span>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '8px',
+          }}
+        >
+          <span>Tax (10%):</span>
+          <span>${tax.toFixed(2)}</span>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontWeight: 'bold',
+            fontSize: '18px',
+            paddingTop: '8px',
+            borderTop: '2px solid #ddd',
+          }}
+        >
+          <span>Total:</span>
+          <span>${total.toFixed(2)}</span>
+        </div>
+      </div>
+
+      {/* Payment button */}
+      <button
+        onClick={handlePayment}
+        disabled={loading || total <= 0}
+        style={{
+          marginTop: '20px',
+          width: '100%',
+          padding: '12px',
+          backgroundColor: loading ? '#ccc' : '#1976d2',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          fontSize: '16px',
+          cursor: loading ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {loading ? 'Processing...' : 'Mock Pay'}
+      </button>
+    </div>
   )
 }
