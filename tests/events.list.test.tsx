@@ -11,8 +11,8 @@ describe('Events List Page', () => {
   it('renders all mock events', () => {
     render(<EventsPage />)
 
-    expect(screen.getByText('Tech Conference 2025')).toBeInTheDocument()
-    expect(screen.getByText('Summer Music Festival')).toBeInTheDocument()
+    expect(screen.getByText('Karoke Bareng Haerin')).toBeInTheDocument()
+    expect(screen.getByText('Liz Ive Fan Meet')).toBeInTheDocument()
     expect(screen.getByText('Startup Pitch Night')).toBeInTheDocument()
   })
 

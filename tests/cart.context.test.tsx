@@ -127,14 +127,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-1',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: true,
       }
@@ -142,7 +142,7 @@ describe('CartContext', () => {
       act(() => {
         result.current.addTicket(ticket)
         result.current.addAddon(addon)
-        result.current.removeTicket('tech-conference-2025')
+        result.current.removeTicket('berdendang-bersama-haerin')
       })
 
       expect(result.current.tickets).toHaveLength(0)
@@ -155,14 +155,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-1',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: true,
       }
@@ -188,14 +188,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-1',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 101,
         perTicket: true,
       }
@@ -221,14 +221,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-3',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: false,
       }
@@ -247,14 +247,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-1',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: true,
       }
@@ -262,7 +262,7 @@ describe('CartContext', () => {
       act(() => {
         result.current.addTicket(ticket)
         result.current.addAddon(addon)
-        result.current.removeAddon('addon-1', 'tech-conference-2025')
+        result.current.removeAddon('addon-1', 'berdendang-bersama-haerin')
       })
 
       expect(result.current.addons).toHaveLength(0)
@@ -272,14 +272,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-3',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: false,
       }
@@ -296,7 +296,7 @@ describe('CartContext', () => {
       act(() => {
         updateResult = result.current.updateAddonQuantity(
           'addon-3',
-          'tech-conference-2025',
+          'berdendang-bersama-haerin',
           5
         )
       })
@@ -309,14 +309,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-3',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: false,
       }
@@ -333,7 +333,7 @@ describe('CartContext', () => {
       act(() => {
         updateResult = result.current.updateAddonQuantity(
           'addon-3',
-          'tech-conference-2025',
+          'berdendang-bersama-haerin',
           201
         )
       })
@@ -347,14 +347,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-1',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: true,
       }
@@ -362,7 +362,7 @@ describe('CartContext', () => {
       act(() => {
         result.current.addTicket(ticket)
         result.current.addAddon(addon)
-        result.current.updateAddonQuantity('addon-1', 'tech-conference-2025', 0)
+        result.current.updateAddonQuantity('addon-1', 'berdendang-bersama-haerin', 0)
       })
 
       expect(result.current.addons).toHaveLength(0)
@@ -397,14 +397,14 @@ describe('CartContext', () => {
       const { result } = renderHook(() => useCart(), { wrapper })
 
       const ticket: CartTicket = {
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 2,
         price: 100,
       }
 
       const addon: CartAddon = {
         addonId: 'addon-1',
-        eventId: 'tech-conference-2025',
+        eventId: 'berdendang-bersama-haerin',
         quantity: 1,
         perTicket: true,
       }

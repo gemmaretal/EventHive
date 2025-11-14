@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import {
   Box,
@@ -98,6 +99,14 @@ export default function NearbyPage() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Button
+        component={Link}
+        href={`/`}
+        variant="text"
+        sx={{ mb: 3 }}
+      >
+        ← Back to Home
+      </Button>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Nearby Discovery

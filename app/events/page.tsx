@@ -1,16 +1,20 @@
 'use client'
-
+import Link from 'next/link'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import { useMockEvents } from '@/lib/useMockEvents'
 import EventCard from '@/components/EventCard'
+import { Button } from '@mui/material'
 
 export default function EventsPage() {
   const { events } = useMockEvents()
 
   return (
     <Box>
+      <Button component={Link} href={`/`} variant="text" sx={{ mb: 3 }}>
+        ← Back to Home
+      </Button>
       <Typography variant="h3" component="h1" gutterBottom>
         Browse Events
       </Typography>

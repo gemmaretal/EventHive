@@ -7,16 +7,16 @@ jest.mock('next/navigation', () => ({
 
 describe('Event Detail Page', () => {
   it('renders event details by slug', () => {
-    render(<EventDetailPage params={{ slug: 'tech-conference-2025' }} />)
+    render(<EventDetailPage params={{ slug: 'berdendang-bersama-haerin' }} />)
 
-    expect(screen.getByText('Tech Conference 2025')).toBeInTheDocument()
+    expect(screen.getByText('Karoke Bareng Haerin')).toBeInTheDocument()
     expect(
       screen.getByText(/biggest tech conference of the year/i)
     ).toBeInTheDocument()
   })
 
   it('renders event tags', () => {
-    render(<EventDetailPage params={{ slug: 'tech-conference-2025' }} />)
+    render(<EventDetailPage params={{ slug: 'berdendang-bersama-haerin' }} />)
 
     expect(screen.getByText('Technology')).toBeInTheDocument()
     expect(screen.getByText('Conference')).toBeInTheDocument()
@@ -24,7 +24,7 @@ describe('Event Detail Page', () => {
   })
 
   it('renders event location and capacity', () => {
-    render(<EventDetailPage params={{ slug: 'tech-conference-2025' }} />)
+    render(<EventDetailPage params={{ slug: 'berdendang-bersama-haerin' }} />)
 
     expect(
       screen.getByText(/San Francisco Convention Center/i)
@@ -33,7 +33,7 @@ describe('Event Detail Page', () => {
   })
 
   it('renders add-ons for the event', () => {
-    render(<EventDetailPage params={{ slug: 'tech-conference-2025' }} />)
+    render(<EventDetailPage params={{ slug: 'berdendang-bersama-haerin' }} />)
 
     expect(screen.getByText('Workshop Access')).toBeInTheDocument()
     expect(screen.getByText('VIP Networking Dinner')).toBeInTheDocument()
@@ -42,21 +42,21 @@ describe('Event Detail Page', () => {
   })
 
   it('renders add-on prices', () => {
-    render(<EventDetailPage params={{ slug: 'tech-conference-2025' }} />)
+    render(<EventDetailPage params={{ slug: 'berdendang-bersama-haerin' }} />)
 
     expect(screen.getByText('$50.00 per ticket')).toBeInTheDocument()
     expect(screen.getByText('$75.00 per ticket')).toBeInTheDocument()
   })
 
   it('renders Add to Cart button', () => {
-    render(<EventDetailPage params={{ slug: 'tech-conference-2025' }} />)
+    render(<EventDetailPage params={{ slug: 'berdendang-bersama-haerin' }} />)
 
     const addToCartButton = screen.getByRole('button', { name: /add to cart/i })
     expect(addToCartButton).toBeInTheDocument()
   })
 
   it('renders Back to Events link', () => {
-    render(<EventDetailPage params={{ slug: 'tech-conference-2025' }} />)
+    render(<EventDetailPage params={{ slug: 'berdendang-bersama-haerin' }} />)
 
     const backLink = screen.getByRole('link', { name: /back to events/i })
     expect(backLink).toBeInTheDocument()
@@ -64,16 +64,16 @@ describe('Event Detail Page', () => {
   })
 
   it('renders different event by slug', () => {
-    render(<EventDetailPage params={{ slug: 'summer-music-festival' }} />)
+    render(<EventDetailPage params={{ slug: 'liz-ive-fan-meet' }} />)
 
-    expect(screen.getByText('Summer Music Festival')).toBeInTheDocument()
+    expect(screen.getByText('Liz Ive Fan Meet')).toBeInTheDocument()
     expect(
       screen.getByText(/unforgettable weekend of live music/i)
     ).toBeInTheDocument()
   })
 
   it('renders add-ons specific to the event', () => {
-    render(<EventDetailPage params={{ slug: 'summer-music-festival' }} />)
+    render(<EventDetailPage params={{ slug: 'liz-ive-fan-meet' }} />)
 
     expect(screen.getByText('VIP Pass Upgrade')).toBeInTheDocument()
     expect(screen.getByText('Camping Spot')).toBeInTheDocument()

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import Container from '@mui/material/Container'
@@ -22,6 +23,7 @@ import GroupChat from '@/components/GroupChat'
 
 export default function GroupDetailPage() {
   const params = useParams()
+  const slug = params.slug as string
   const groupId = params.id as string
   const { getGroupById, acceptMember, leaveGroup } = useGroups()
   const [selectedUserId, setSelectedUserId] = useState(mockUsers[0]?.id || '')
@@ -54,6 +56,9 @@ export default function GroupDetailPage() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
+       <Button component={Link}  href={`/events/${slug}/groups`} variant="text" sx={{ mb: 3 }}>
+        ← Back to Groups List
+      </Button>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {group.title}

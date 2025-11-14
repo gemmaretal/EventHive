@@ -11,7 +11,7 @@ export interface Group {
 export const mockGroups: Group[] = [
   {
     id: 'group-001',
-    eventSlug: 'tech-conference-2025',
+    eventSlug: 'berdendang-bersama-haerin',
     title: 'AI Enthusiasts Group',
     organizerName: 'Alice Chen',
     maxMembers: 10,
@@ -20,7 +20,7 @@ export const mockGroups: Group[] = [
   },
   {
     id: 'group-002',
-    eventSlug: 'tech-conference-2025',
+    eventSlug: 'berdendang-bersama-haerin',
     title: 'Startup Founders Meetup',
     organizerName: 'Fiona Lee',
     maxMembers: 8,
@@ -29,7 +29,7 @@ export const mockGroups: Group[] = [
   },
   {
     id: 'group-003',
-    eventSlug: 'summer-music-festival',
+    eventSlug: 'liz-ive-fan-meet',
     title: 'Festival Camping Crew',
     organizerName: 'Bob Martinez',
     maxMembers: 15,
@@ -41,6 +41,15 @@ export const mockGroups: Group[] = [
     eventSlug: 'startup-pitch-night',
     title: 'Investor Network',
     organizerName: 'George Wilson',
+    maxMembers: 12,
+    members: ['user-007', 'user-001', 'user-006'],
+    pendingRequests: ['user-003', 'user-005'],
+  },
+  {
+    id: 'group-005',
+    eventSlug: 'startup-pitch-night',
+    title: 'Investor Network New',
+    organizerName: 'Alice Chen',
     maxMembers: 12,
     members: ['user-007', 'user-001', 'user-006'],
     pendingRequests: ['user-003', 'user-005'],
