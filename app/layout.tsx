@@ -5,6 +5,7 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
 import ThemeRegistry from '@/components/ThemeRegistry'
+import { CartProvider } from '@/context/CartContext'
 
 export const metadata: Metadata = {
   title: 'EventHive - Event Group Buy Platform',
@@ -21,72 +22,74 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider>
           <ThemeRegistry>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
-              }}
-            >
-              {/* Header */}
+            <CartProvider>
               <Box
-                component="header"
                 sx={{
-                  py: 2,
-                  px: 3,
-                  backgroundColor: 'primary.main',
-                  color: 'white',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minHeight: '100vh',
                 }}
               >
-                <Container maxWidth="lg">
-                  <Typography variant="h6" component="div">
-                    EventHive
-                  </Typography>
-                </Container>
-              </Box>
+                {/* Header */}
+                <Box
+                  component="header"
+                  sx={{
+                    py: 2,
+                    px: 3,
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                  }}
+                >
+                  <Container maxWidth="lg">
+                    <Typography variant="h6" component="div">
+                      EventHive
+                    </Typography>
+                  </Container>
+                </Box>
 
-              {/* Main Content */}
-              <Box component="main" sx={{ flex: 1, py: 4 }}>
-                <Container maxWidth="lg">{children}</Container>
-              </Box>
+                {/* Main Content */}
+                <Box component="main" sx={{ flex: 1, py: 4 }}>
+                  <Container maxWidth="lg">{children}</Container>
+                </Box>
 
-              {/* Footer */}
-              <Box
-                component="footer"
-                sx={{
-                  py: 3,
-                  px: 2,
-                  mt: 'auto',
-                  backgroundColor: 'background.paper',
-                  borderTop: 1,
-                  borderColor: 'divider',
-                }}
-              >
-                <Container maxWidth="lg">
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    align="center"
-                  >
-                    © {new Date().getFullYear()} EventHive. All rights
-                    reserved.
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    align="center"
-                  >
-                    <Link href="/about" color="inherit">
-                      About
-                    </Link>
-                    {' | '}
-                    <Link href="/contact" color="inherit">
-                      Contact
-                    </Link>
-                  </Typography>
-                </Container>
+                {/* Footer */}
+                <Box
+                  component="footer"
+                  sx={{
+                    py: 3,
+                    px: 2,
+                    mt: 'auto',
+                    backgroundColor: 'background.paper',
+                    borderTop: 1,
+                    borderColor: 'divider',
+                  }}
+                >
+                  <Container maxWidth="lg">
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      align="center"
+                    >
+                      © {new Date().getFullYear()} EventHive. All rights
+                      reserved.
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      align="center"
+                    >
+                      <Link href="/about" color="inherit">
+                        About
+                      </Link>
+                      {' | '}
+                      <Link href="/contact" color="inherit">
+                        Contact
+                      </Link>
+                    </Typography>
+                  </Container>
+                </Box>
               </Box>
-            </Box>
+            </CartProvider>
           </ThemeRegistry>
         </AppRouterCacheProvider>
       </body>
