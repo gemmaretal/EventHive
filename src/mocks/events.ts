@@ -13,26 +13,26 @@ export interface Event {
 export const mockEvents: Event[] = [
   {
     id: '1',
-    slug: 'tech-conference-2025',
-    title: 'Tech Conference 2025',
+    slug: 'berdendang-bersama-haerin',
+    title: 'Karoke Bareng Haerin',
     description:
-      'Join us for the biggest tech conference of the year! Featuring keynote speakers from leading tech companies, hands-on workshops, and networking opportunities. Learn about the latest trends in AI, cloud computing, and software development.',
+      `Oh my, oh my God, I knew this would happen I was really hoping that he will come through Oh my, oh my God, it's only you Asking all the time about what I should do`,
     date: '2025-03-15T09:00:00Z',
     location: 'San Francisco Convention Center',
     capacity: 500,
-    bannerUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87',
-    tags: ['Technology', 'Conference', 'Networking'],
+    bannerUrl: '/Image/haerin.jpg',
+    tags: ['Music', 'Festival', 'Noraebang'],
   },
   {
     id: '2',
-    slug: 'summer-music-festival',
-    title: 'Summer Music Festival',
+    slug: 'liz-ive-fan-meet',
+    title: 'Liz Ive Fan Meet',
     description:
-      'Experience an unforgettable weekend of live music featuring top artists from around the world. Multiple stages, food vendors, and camping options available. Bring your friends and enjoy the ultimate summer festival experience.',
+      `Brighter, redder It's okay to rise up and burn Higher, up higher Even if you hide, you're still in the palm of my hand The deep darkness, the thick clouds will Hide you beneath a long night again Chew and swallow, get ready for it, baby Listen when I say-ay-ay-ay-ay-ay-ay-ay-ay-ay (Yeah) *Every time I see you, I can't resist*`,
     date: '2025-07-20T14:00:00Z',
     location: 'Golden Gate Park, San Francisco',
     capacity: 2000,
-    bannerUrl: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea',
+    bannerUrl: '/Image/liz.jpg',
     tags: ['Music', 'Festival', 'Outdoor'],
   },
   {

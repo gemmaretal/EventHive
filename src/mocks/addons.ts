@@ -7,7 +7,7 @@ export interface AddOn {
 }
 
 export const mockAddOns: Record<string, AddOn[]> = {
-  'tech-conference-2025': [
+  'berdendang-bersama-haerin': [
     {
       id: 'addon-1',
       name: 'Workshop Access',
@@ -37,7 +37,7 @@ export const mockAddOns: Record<string, AddOn[]> = {
       perTicket: false,
     },
   ],
-  'summer-music-festival': [
+  'liz-ive-fan-meet': [
     {
       id: 'addon-5',
       name: 'VIP Pass Upgrade',
@@ -47,7 +47,7 @@ export const mockAddOns: Record<string, AddOn[]> = {
     },
     {
       id: 'addon-6',
-      name: 'Camping Spot',
+      name: 'Platinum Pass Upgrade ',
       price: 80,
       stock: 300,
       perTicket: false,

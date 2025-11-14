@@ -40,12 +40,12 @@ describe('Cart Calculation Utilities', () => {
   describe('calculateAddonsSubtotal', () => {
     it('should calculate subtotal for per-order addon', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const addons: CartAddon[] = [
         {
           addonId: 'addon-3',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 1,
           perTicket: false,
         },
@@ -55,12 +55,12 @@ describe('Cart Calculation Utilities', () => {
 
     it('should calculate subtotal for per-ticket addon', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 3, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 3, price: 100 },
       ]
       const addons: CartAddon[] = [
         {
           addonId: 'addon-1',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 1,
           perTicket: true,
         },
@@ -70,12 +70,12 @@ describe('Cart Calculation Utilities', () => {
 
     it('should calculate subtotal for multiple per-ticket addons', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const addons: CartAddon[] = [
         {
           addonId: 'addon-1',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 2,
           perTicket: true,
         },
@@ -85,18 +85,18 @@ describe('Cart Calculation Utilities', () => {
 
     it('should calculate subtotal for mixed per-ticket and per-order addons', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const addons: CartAddon[] = [
         {
           addonId: 'addon-1',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 1,
           perTicket: true,
         },
         {
           addonId: 'addon-3',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 1,
           perTicket: false,
         },
@@ -106,7 +106,7 @@ describe('Cart Calculation Utilities', () => {
 
     it('should return 0 for empty addons array', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       expect(calculateAddonsSubtotal([], tickets)).toBe(0)
     })
@@ -131,7 +131,7 @@ describe('Cart Calculation Utilities', () => {
       const addons: CartAddon[] = [
         {
           addonId: 'addon-1',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 1,
           perTicket: true,
         },
@@ -155,18 +155,18 @@ describe('Cart Calculation Utilities', () => {
 
     it('should calculate complete cart summary with tickets and addons', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const addons: CartAddon[] = [
         {
           addonId: 'addon-1',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 1,
           perTicket: true,
         },
         {
           addonId: 'addon-3',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 1,
           perTicket: false,
         },
@@ -201,13 +201,13 @@ describe('Cart Calculation Utilities', () => {
   describe('validateAddonStock', () => {
     it('should validate sufficient stock for per-order addon', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const currentCartAddons: CartAddon[] = []
 
       const result = validateAddonStock(
         'addon-3',
-        'tech-conference-2025',
+        'berdendang-bersama-haerin',
         1,
         currentCartAddons,
         tickets
@@ -219,13 +219,13 @@ describe('Cart Calculation Utilities', () => {
 
     it('should validate sufficient stock for per-ticket addon', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const currentCartAddons: CartAddon[] = []
 
       const result = validateAddonStock(
         'addon-1',
-        'tech-conference-2025',
+        'berdendang-bersama-haerin',
         1,
         currentCartAddons,
         tickets
@@ -237,13 +237,13 @@ describe('Cart Calculation Utilities', () => {
 
     it('should reject insufficient stock for per-order addon', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const currentCartAddons: CartAddon[] = []
 
       const result = validateAddonStock(
         'addon-3',
-        'tech-conference-2025',
+        'berdendang-bersama-haerin',
         201,
         currentCartAddons,
         tickets
@@ -256,13 +256,13 @@ describe('Cart Calculation Utilities', () => {
 
     it('should reject insufficient stock for per-ticket addon', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 10, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 10, price: 100 },
       ]
       const currentCartAddons: CartAddon[] = []
 
       const result = validateAddonStock(
         'addon-1',
-        'tech-conference-2025',
+        'berdendang-bersama-haerin',
         11,
         currentCartAddons,
         tickets
@@ -274,12 +274,12 @@ describe('Cart Calculation Utilities', () => {
 
     it('should account for existing cart items when validating stock', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const currentCartAddons: CartAddon[] = [
         {
           addonId: 'addon-3',
-          eventId: 'tech-conference-2025',
+          eventId: 'berdendang-bersama-haerin',
           quantity: 150,
           perTicket: false,
         },
@@ -287,7 +287,7 @@ describe('Cart Calculation Utilities', () => {
 
       const result = validateAddonStock(
         'addon-3',
-        'tech-conference-2025',
+        'berdendang-bersama-haerin',
         51,
         currentCartAddons,
         tickets
@@ -315,13 +315,13 @@ describe('Cart Calculation Utilities', () => {
 
     it('should reject non-existent addon', () => {
       const tickets: CartTicket[] = [
-        { eventId: 'tech-conference-2025', quantity: 2, price: 100 },
+        { eventId: 'berdendang-bersama-haerin', quantity: 2, price: 100 },
       ]
       const currentCartAddons: CartAddon[] = []
 
       const result = validateAddonStock(
         'non-existent-addon',
-        'tech-conference-2025',
+        'berdendang-bersama-haerin',
         1,
         currentCartAddons,
         tickets
@@ -334,7 +334,7 @@ describe('Cart Calculation Utilities', () => {
 
   describe('getAddonById', () => {
     it('should return addon data for valid addon', () => {
-      const addon = getAddonById('addon-1', 'tech-conference-2025')
+      const addon = getAddonById('addon-1', 'berdendang-bersama-haerin')
 
       expect(addon).toBeDefined()
       expect(addon?.id).toBe('addon-1')
@@ -343,7 +343,7 @@ describe('Cart Calculation Utilities', () => {
     })
 
     it('should return undefined for non-existent addon', () => {
-      const addon = getAddonById('non-existent', 'tech-conference-2025')
+      const addon = getAddonById('non-existent', 'berdendang-bersama-haerin')
 
       expect(addon).toBeUndefined()
     })

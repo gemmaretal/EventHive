@@ -12,6 +12,7 @@ import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
 import { type Event } from '@/mocks/events'
 import { type AddOn } from '@/mocks/addons'
+import Link from 'next/link'
 
 interface EventDetailProps {
   event: Event
@@ -102,6 +103,14 @@ export default function EventDetail({ event, addOns }: EventDetailProps) {
             <Typography variant="body1" gutterBottom>
               <strong>👥 Capacity:</strong> {event.capacity} attendees
             </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              href={`/events/${event.slug}/groups`}
+            >
+              Check Available Group to Join this Event!
+            </Button>
           </Box>
 
           {addOns.length > 0 && (

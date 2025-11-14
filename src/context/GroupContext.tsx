@@ -86,6 +86,7 @@ export function GroupProvider({ children }: { children: React.ReactNode }) {
   }
 
   const requestJoin = (groupId: string, userId: string): void => {
+    alert('Successfully Request Join!')
     setGroups(prev =>
       prev.map(group => {
         if (group.id !== groupId) return group
@@ -110,6 +111,7 @@ export function GroupProvider({ children }: { children: React.ReactNode }) {
   }
 
   const acceptMember = (groupId: string, userId: string): void => {
+    alert('Successfully Accept The Request!')
     setGroups(prev =>
       prev.map(group => {
         if (group.id !== groupId) return group

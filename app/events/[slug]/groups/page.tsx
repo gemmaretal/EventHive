@@ -1,5 +1,5 @@
 'use client'
-
+import Link from 'next/link'
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import Container from '@mui/material/Container'
@@ -15,6 +15,7 @@ import { useGroups } from '@/context/GroupContext'
 import { mockUsers } from '@/mocks/users'
 import GroupCard from '@/components/GroupCard'
 import CreateGroupDialog from '@/components/CreateGroupDialog'
+
 
 export default function EventGroupsPage() {
   const params = useParams()
@@ -45,6 +46,9 @@ export default function EventGroupsPage() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
+      <Button component={Link}  href={`/events/${slug}`} variant="text" sx={{ mb: 3 }}>
+        ← Back to Event Details
+      </Button>
         <Typography variant="h4" component="h1" gutterBottom>
           Groups for this Event
         </Typography>

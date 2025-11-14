@@ -24,6 +24,14 @@ export default function Home() {
           Browse Events
         </Button>
         <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          href="/nearby"
+        >
+          Nearby Event
+        </Button>
+        <Button
           variant="outlined"
           color="primary"
           component={Link}
